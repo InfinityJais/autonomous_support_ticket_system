@@ -1,0 +1,42 @@
+---
+analyze_and_route_support_ticket:
+  description: Analyze the incoming support ticket with subject '{ticket_subject}'
+    and body '{ticket_body}'. Determine the primary intent and category of the request.
+    Route it to the appropriate specialist agent by identifying if it's a password/login
+    issue, leave balance query, or other type of request.
+  expected_output: A clear routing decision specifying which specialist agent should
+    handle this ticket and why, along with a summary of the ticket's main issue
+  agent: ticket_router_agent
+handle_password_reset_request:
+  description: Handle a password reset request for user '{user_email}'. Simulate sending
+    a password reset link and provide a comprehensive response to guide the user through
+    the recovery process. Include security best practices and next steps.
+  expected_output: A professional, user-friendly response confirming that a password
+    reset link has been sent (simulated) and providing clear instructions for the
+    user to complete the password reset process
+  agent: password_reset_agent
+  context:
+  - analyze_and_route_support_ticket
+retrieve_and_report_leave_balance:
+  description: Retrieve and report the leave balance for user '{user_email}'. Simulate
+    accessing the HR system to get current leave balances including vacation days,
+    sick leave, and other available time off. Provide a clear breakdown of available
+    leave.
+  expected_output: A detailed, user-friendly response showing the current leave balance
+    breakdown including vacation days, sick leave, and any other applicable time off,
+    with clear explanations of each category
+  agent: leave_balance_agent
+  context:
+  - analyze_and_route_support_ticket
+generate_final_support_response:
+  description: Generate the final support response based on the ticket analysis and
+    specialized agent handling. Consolidate the information from either the password
+    reset process or leave balance inquiry into a complete, professional response
+    for the user.
+  expected_output: A complete, professional support ticket response that addresses
+    the user's original request with all necessary information, next steps, and contact
+    information for follow-up if needed
+  agent: ticket_router_agent
+  context:
+  - handle_password_reset_request
+  - retrieve_and_report_leave_balance
